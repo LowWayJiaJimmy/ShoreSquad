@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ShoreSquad</title>
+  <meta name="description" content="Rally your crew, track weather, and hit the next beach cleanup with ShoreSquad.">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <h1 class="brand">ShoreSquad</h1>
+      <button id="nav-toggle" class="nav-toggle" aria-expanded="false" aria-controls="main-nav">Menu</button>
+      <nav id="main-nav" class="main-nav" hidden>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#map">Map</a></li>
+          <li><a href="#weather">Weather</a></li>
+          <li><a href="#events">Events</a></li>
+          <li><a href="#crew">Crew</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="container">
+        <h2 class="hero-title">Rally Your Crew, Clean Our Shores</h2>
+        <p class="tagline">Track weather, find beaches, and make eco-action fun with your squad!</p>
+        <div class="hero-ctas">
+          <a href="#events" class="btn primary">Join a Cleanup</a>
+          <a href="#map" class="btn">Create Event</a>
+        </div>
+
+        <div class="metrics" aria-hidden="false">
+          <div class="metric">
+            <div class="metric-value" data-target="500">0</div>
+            <div class="metric-label">Cleanups Organized</div>
+          </div>
+          <div class="metric">
+            <div class="metric-value" data-target="2500">0</div>
+            <div class="metric-label">Kg Collected</div>
+          </div>
+          <div class="metric">
+            <div class="metric-value" data-target="10000">0</div>
+            <div class="metric-label">Squad Members</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="map" class="panel">
+      <div class="container">
+        <h3>Interactive Map</h3>
+        <div id="map-placeholder" class="map-placeholder" role="region" aria-label="Map showing beach cleanups">
+          <p>Map will appear here. Connect a map provider like Leaflet or Mapbox for full functionality.</p>
+          <button id="mock-add-marker" class="btn small">Simulate Marker</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="weather" class="panel">
+      <div class="container">
+        <div class="weather-grid">
+          <div class="weather-card" id="weather-card" role="status" aria-live="polite">
+            <div class="weather-current">
+              <div class="weather-temp" id="weather-temp">--°C</div>
+              <div class="weather-desc" id="weather-desc">--</div>
+            </div>
+            <div class="weather-meta">
+              <div id="weather-humidity">Humidity: --</div>
+              <div id="weather-wind">Wind: --</div>
+            </div>
+            <div class="weather-actions">
+              <button id="get-weather" class="btn">Check my weather</button>
+            </div>
+          </div>
+          <div class="forecast" id="forecast">
+            <!-- 4-day forecast inserted here -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="events" class="panel">
+      <div class="container">
+        <h3>Upcoming Cleanups</h3>
+        <div class="events-grid" id="events-grid" aria-live="polite">
+          <!-- events rendered by JS -->
+        </div>
+      </div>
+    </section>
+
+    <section id="crew" class="panel">
+      <div class="container">
+        <h3>Your Squad</h3>
+        <div class="crew-grid" id="crew-grid">
+          <div class="crew-member">
+            <div class="avatar">AC</div>
+            <div class="crew-meta"><strong>Alex Chen</strong><div class="role">Squad Leader • 24 cleanups</div></div>
+          </div>
+          <div class="crew-member">
+            <div class="avatar">MR</div>
+            <div class="crew-meta"><strong>Maya Rodriguez</strong><div class="role">Ocean Guardian • 18 cleanups</div></div>
+          </div>
+          <div class="crew-member">
+            <div class="avatar">JK</div>
+            <div class="crew-meta"><strong>Jordan Kim</strong><div class="role">Beach Warrior • 31 cleanups</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h4>Platform</h4>
+          <ul class="footer-links">
+            <li><a href="#map">Interactive Maps</a></li>
+            <li><a href="#weather">Weather Tracking</a></li>
+            <li><a href="#crew">Crew Management</a></li>
+            <li><a href="#events">Event Planning</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Community</h4>
+          <ul class="footer-links">
+            <li><a href="#events">Join Events</a></li>
+            <li><a href="#">Leaderboard</a></li>
+            <li><a href="#">Blog</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Follow Us</h4>
+          <p>Instagram • TikTok • Twitter</p>
+        </div>
+      </div>
+      <p class="muted">© 2025 ShoreSquad. Made with 💙 for our oceans.</p>
+    </div>
+  </footer>
+
+  <script src="js/app.js" defer></script>
+</body>
+</html>
