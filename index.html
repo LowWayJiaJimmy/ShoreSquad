@@ -6,6 +6,8 @@
   <title>ShoreSquad</title>
   <meta name="description" content="Rally your crew, track weather, and hit the next beach cleanup with ShoreSquad.">
   <link rel="stylesheet" href="css/styles.css">
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
   <header class="site-header">
@@ -54,9 +56,14 @@
     <section id="map" class="panel">
       <div class="container">
         <h3>Interactive Map</h3>
-        <div id="map-placeholder" class="map-placeholder" role="region" aria-label="Map showing beach cleanups">
-          <p>Map will appear here. Connect a map provider like Leaflet or Mapbox for full functionality.</p>
-          <button id="mock-add-marker" class="btn small">Simulate Marker</button>
+        <div class="map-frame" role="region" aria-label="Map showing next cleanup at Pasir Ris Beach">
+          <!-- Leaflet map will be initialized into #mapid -->
+          <div id="mapid" aria-label="Map showing Next Cleanup at Pasir Ris Beach"></div>
+          <p class="muted small">Pin: <strong>Next Cleanup</strong> — Pasir Ris Beach (1.381497, 103.955574)</p>
+          <div class="map-actions">
+            <button id="open-google" class="btn small">Open in Google Maps</button>
+            <button id="mock-add-marker" class="btn small">Simulate Marker</button>
+          </div>
         </div>
       </div>
     </section>
@@ -143,6 +150,8 @@
     </div>
   </footer>
 
+  <!-- Leaflet JS (CDN) -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="js/app.js" defer></script>
 </body>
 </html>

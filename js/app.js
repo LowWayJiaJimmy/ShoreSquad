@@ -94,6 +94,33 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+  
+  // Initialize Leaflet map for Next Cleanup (Pasir Ris)
+  const mapContainer = document.getElementById('mapid');
+  if (mapContainer && typeof L !== 'undefined') {
+    try {
+      const lat = 1.381497, lon = 103.955574;
+      const map = L.map('mapid', {scrollWheelZoom:false}).setView([lat, lon], 15);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(map);
+
+      const marker = L.marker([lat, lon]).addTo(map);
+      marker.bindPopup('<strong>Next Cleanup</strong><br>Pasir Ris Beach<br>Street View Asia 1.381497, 103.955574').openPopup();
+
+      // Open in Google Maps button
+      const openBtn = document.getElementById('open-google');
+      if (openBtn) {
+        openBtn.addEventListener('click', () => {
+          const url = `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`;
+          window.open(url, '_blank', 'noopener');
+        });
+      }
+    } catch (err) {
+      console.warn('Leaflet init failed', err);
+    }
+  }
 });
 
 function getCurrentPosition(options){
