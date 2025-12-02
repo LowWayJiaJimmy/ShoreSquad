@@ -62,37 +62,71 @@ document.addEventListener('DOMContentLoaded', () => {
   const forecastEl = document.getElementById('forecast');
 
   if (getWeatherBtn) {
-    getWeatherBtn.addEventListener('click', async () => {
+    // Named fetch function so we can call it on load as well as on click
+    async function fetchWeather() {
       tempEl.textContent = 'Locating...';
+      forecastEl.innerHTML = '';
       try {
         const pos = await getCurrentPosition({enableHighAccuracy:false,timeout:8000});
         const lat = pos.coords.latitude; const lon = pos.coords.longitude;
         tempEl.textContent = 'Fetching...';
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_mean&timezone=auto`;
-        const res = await fetch(url);
-        if (!res.ok) throw new Error('Weather fetch failed');
-        const data = await res.json();
-        const w = data.current_weather;
-        tempEl.textContent = `${Math.round(w.temperature)}°C`;
-        descEl.textContent = `Wind ${Math.round(w.windspeed)} km/h`;
-        humEl.textContent = `Updated: ${new Date().toLocaleTimeString()}`;
-        windEl.textContent = `Direction: ${w.winddirection}°`;
-        // Render simple daily forecast if available
-        forecastEl.innerHTML = '';
-        if (data.daily && data.daily.time) {
-          for (let i=0;i<Math.min(4,data.daily.time.length);i++){
-            const d = data.daily;
-            const day = document.createElement('div'); day.className='day';
-            const date = new Date(d.time[i]);
-            day.innerHTML = `<div>${date.toLocaleDateString(undefined,{weekday:'short'})}</div><div>${Math.round(d.temperature_2m_max[i])}°/${Math.round(d.temperature_2m_min[i])}°</div>`;
-            forecastEl.appendChild(day);
-          }
+
+        // Fetch current weather from Open-Meteo (metric units: °C, km/h)
+        const omUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&timezone=auto`;
+        const neaUrl = 'https://api.data.gov.sg/v1/environment/4-day-weather-forecast';
+
+        const [omRes, neaRes] = await Promise.allSettled([fetch(omUrl), fetch(neaUrl)]);
+
+        // Handle Open-Meteo response
+        if (omRes.status === 'fulfilled' && omRes.value.ok) {
+          const data = await omRes.value.json();
+          const w = data.current_weather;
+          tempEl.textContent = `${Math.round(w.temperature)}°C`;
+          descEl.textContent = `Wind ${Math.round(w.windspeed)} km/h`;
+          humEl.textContent = `Updated: ${new Date().toLocaleTimeString()}`;
+          windEl.textContent = `Direction: ${Math.round(w.winddirection)}°`;
+        } else {
+          tempEl.textContent = 'Current weather unavailable';
+          descEl.textContent = '';
         }
+
+        // Handle NEA 4-day forecast (textual forecasts for Singapore)
+        if (neaRes.status === 'fulfilled' && neaRes.value.ok) {
+          const neaData = await neaRes.value.json();
+          const items = neaData.items || [];
+          if (items.length && items[0].forecasts) {
+            const forecasts = items[0].forecasts; // array of {date, forecast}
+            forecastEl.innerHTML = '';
+            forecasts.slice(0, 7).forEach(f => {
+              const day = document.createElement('div'); day.className = 'day';
+              const date = new Date(f.date);
+              const weekday = date.toLocaleDateString(undefined,{weekday:'short'});
+              // Shorten forecast text for layout
+              const text = (f.forecast || '').replace(/\s+/g,' ').trim();
+              day.innerHTML = `<div><strong>${weekday}</strong></div><div style="font-size:.95rem">${text}</div>`;
+              forecastEl.appendChild(day);
+            });
+          } else {
+            forecastEl.innerHTML = '<div class="muted">NEA forecast not available</div>';
+          }
+        } else {
+          forecastEl.innerHTML = '<div class="muted">NEA forecast unavailable</div>';
+        }
+
       } catch (err) {
         tempEl.textContent = 'Unable to get weather';
         descEl.textContent = err.message || err;
+        forecastEl.innerHTML = '<div class="muted">Forecast unavailable</div>';
       }
-    });
+    }
+
+    getWeatherBtn.addEventListener('click', fetchWeather);
+
+    // Start weather check immediately when the page opens
+    // (This will prompt for geolocation permission from the browser.)
+    setTimeout(() => {
+      try { fetchWeather(); } catch (e) { console.warn('Auto weather fetch failed', e); }
+    }, 400);
   }
   
   // Initialize Leaflet map for Next Cleanup (Pasir Ris)
